@@ -1,29 +1,34 @@
 import sys
-import time
-from PyQt5.QtWidgets import *
 
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
 
-class MyWindow(Qwidget):
+
+class MyWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.init_ui()
-        self.msg_history = list()
 
     def init_ui(self):
-        self.resize(400, 300)
-        ok_button = QPushButton("OK", self)
-        ok_button.setGeometry(20, 100, 50, 25)
-        cancel_button = QPushButton("Cancel", self)
-        cancel_button.setGeometry(100, 100, 50, 25)
+        # 更改当前Widge的宽高
+        self.resize(500, 300)
+        # 创建一个按钮
+        btn = QPushButton("点我点我", self)
+        # 设置窗口位置、宽高
+        btn.setGeometry(200, 200, 100, 30)
+        # 将按钮被点击时触发的信号与我们定义的函数（方法）进行绑定
+        # 注意：这里没有()，即写函数的名字，而不是名字()
+        btn.clicked.connect(self.click_my_btn)
 
-    def my_slot(self,msg):
+    def click_my_btn(self, arg):
+        # 槽函数，点击按钮则调用该函数
+        # 这里的参数正好是信号发出，传递的参数
+        print("点击按钮啦~", arg)
 
-    def check_msg(self):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    dialog = MyWindow()
-    dialog.resize(400, 300)
-    dialog.show()
-    sys.exit(app.exec_())   
+
+    w = MyWindow()
+    w.show()
+
+    app.exec()
