@@ -50,10 +50,13 @@ class JoystickWidget(QWidget):
         length = vec.manhattanLength()
         if length <= self.radius:
             self.position = position
-        # else:
-        #     self.position = self.center + vec.normalized() * self.radius
+        else:
+            self.position = self.center + vec.normalized() * self.radius
 
         self.update()
+
+    
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
