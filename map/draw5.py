@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QSlider
 from PyQt5.QtGui import QPainter, QPen, QFont
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QPointF
 
 
 class DrawShapesWidget(QWidget):
@@ -16,6 +16,9 @@ class DrawShapesWidget(QWidget):
         self.l_y = 0
         self.r_x = 0
         self.r_y = 0
+
+        self.start_point = QPointF(20, 20)
+        self.end_point = QPointF(180, 80)
 
         self.initUI()
 
@@ -77,6 +80,7 @@ class DrawShapesWidget(QWidget):
         self.draw_rectangle(qp)
         self.draw_txt(qp)
         self.draw_point(qp)
+        self.drawArrow(qp,self.start_point, self.end_point)
         qp.end()
 
     def draw_rectangle(self, qp):
@@ -96,11 +100,10 @@ class DrawShapesWidget(QWidget):
 
     def draw_txt(self, qp):
         qp.setFont(QFont('Arial', 14))
-        qp.drawText(315, 210 + 7, f'x1: {self.x1}')  # 右侧边长
-        qp.drawText(210 - 14, 315 + 14, f'y1: {self.y1}')  # 右侧边长
-        qp.drawText(535 - 35, 210 + 7, f'x2: {self.x2}')  # 右侧边长
-        qp.drawText(640 - 14, 315 + 14, f'y2: {self.y2}')  # 右侧边长
-
+        qp.drawText(315, 217, f'x1: {self.x1}') 
+        qp.drawText(210 - 14, 315 + 14, f'y1: {self.y1}')  
+        qp.drawText(535 - 35, 217, f'x2: {self.x2}') 
+        qp.drawText(640 - 14, 315 + 14, f'y2: {self.y2}')  
     def draw_point(self, qp):
         pen = QPen(Qt.black, 4)  # 圆边的宽度
         qp.setPen(pen)
@@ -116,12 +119,16 @@ class DrawShapesWidget(QWidget):
         # # 绘制第二个矩形内的圆形
         qp.drawEllipse(self.r_x - radius // 2, self.r_y - radius // 2, radius, radius)
 
-    def get_abs(self, x):
-        if x < 0:
-            return -x
-        else:
-            return x
-
+    def drawArrow(self, painter, start_point, end_point):
+        # 计算箭头方向
+        line = QLineF(start_point, end_point)
+        angle = line.angle() + (90 if line.length() > 0 else 270)
+        # 箭头大小
+        size = 10.
+        # 箭头起点
+        arrow_start = end_point - QPointF(size * math.cos(angle * math.pi / 180), size * math.sin(angle * math.pi / 180))
+        # 绘制箭头
+        painter.drawLine(arrow_start, end_point)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
